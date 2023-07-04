@@ -3,6 +3,10 @@
 A toy vm implemented in c.
 Made as a learning exercise.
 
+## Building
+
+For now it's just: `gcc test_vm.c vm.c`
+
 ## Architecture
 
 - byte size: 8 bits
@@ -23,6 +27,7 @@ Made as a learning exercise.
 - output (dedicated print op, custom character set)
 - error handling (error codes on crash)
 - add license
+- makefile (or cmake?)
 
 ## TODO?
 
