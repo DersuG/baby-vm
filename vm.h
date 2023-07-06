@@ -46,7 +46,7 @@ int
 vm_read_word (word_t *result, struct VM *vm);
 
 /* Uses the next 2 bytes after the instruction as an absolute address,
-   (little-endian) and loads that memory value into register A.
+   (little-endian) and loads the byte at that location into register A.
    Sets and returns status codes:
    - `VM_STATUS_OK` if ok,
    - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory */

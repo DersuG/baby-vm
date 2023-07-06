@@ -64,6 +64,9 @@ vm_read_byte (byte_t *result, struct VM *vm)
 int
 vm_read_word (word_t *result, struct VM *vm)
 {
+    /* reset result */
+    *result = 0;
+
     /* get bytes (little endian) */
     for (int i = 0; i < sizeof (*result); i++)
     {
@@ -85,33 +88,22 @@ vm_read_word (word_t *result, struct VM *vm)
 int
 vm_op_lda (struct VM *vm)
 {
-    /* get address (little endian) */
-    word_t address = 0;
-    for (int i = 0; i < sizeof (address); i++)
+    word_t address;
+    vm->status = vm_read_word (&address, vm);
+    if (vm->status != VM_STATUS_OK)
     {
-        byte_t byte;
-        if (vm_read_byte (&byte, vm) == VM_STATUS_END_OF_MEMORY)
-        {
-            vm->status = VM_STATUS_END_OF_MEMORY;
-            return VM_STATUS_END_OF_MEMORY; /* program counter overflow */
-        }
-
-        word_t shifted = (word_t) byte;
-        shifted <<= i * 8;
-        address |= shifted;
+        return vm->status;
     }
 
-    /* load data */
     vm->register_a = vm->memory[address];
 
-    vm->status = VM_STATUS_OK;
     return VM_STATUS_OK;
 }
 
 int
 vm_op_add (struct VM *vm)
 {
-    /* detect overflow */
+    /* load 1-word address */
     word_t room = WORD_T_MAX - vm->register_a;
     if (vm->register_b > room)
     {
