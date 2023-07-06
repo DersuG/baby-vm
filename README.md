@@ -12,11 +12,12 @@ For now it's just: `gcc test_vm.c vm.c`
 - byte size: 8 bits
 - word size: 2 bytes
 - little-endian
-- 2 registers (A and B)
+- 1-word program counter register
+- 1-word status register
+- 2 1-word user registers (A and B)
 
 ## TODO
 
-- error code register (1 byte, for overflows etc.)
 - decide opcodes + instruction format
 - bitwise ops
 - register ops (swap, copy, load)
