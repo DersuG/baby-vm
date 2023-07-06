@@ -50,13 +50,15 @@ vm_read_byte (byte_t *result, struct VM *vm)
     /* detect overflow */
     if (vm->program_counter >= WORD_T_MAX)
     {
-        return 0;
+        vm->status = VM_STATUS_END_OF_MEMORY;
+        return VM_STATUS_END_OF_MEMORY;
     }
 
     *result = vm->memory[vm->program_counter];
     vm->program_counter++;
 
-    return 1;
+    vm->status = VM_STATUS_OK;
+    return VM_STATUS_OK;
 }
 
 int
@@ -66,16 +68,18 @@ vm_read_word (word_t *result, struct VM *vm)
     for (int i = 0; i < sizeof (*result); i++)
     {
         byte_t byte;
-        if (!vm_read_byte (&byte, vm))
+        if (vm_read_byte (&byte, vm) == VM_STATUS_END_OF_MEMORY)
         {
-            return 0; /* program counter overflow */
+            vm->status = VM_STATUS_END_OF_MEMORY;
+            return VM_STATUS_END_OF_MEMORY; /* program counter overflow */
         }
         word_t shifted = (word_t) byte;
         shifted <<= i * 8;
         *result |= shifted;
     }
 
-    return 1;
+    vm->status = VM_STATUS_OK;
+    return VM_STATUS_OK;
 }
 
 int
@@ -86,9 +90,10 @@ vm_op_lda (struct VM *vm)
     for (int i = 0; i < sizeof (address); i++)
     {
         byte_t byte;
-        if (!vm_read_byte (&byte, vm))
+        if (vm_read_byte (&byte, vm) == VM_STATUS_END_OF_MEMORY)
         {
-            return 0; /* program counter overflow */
+            vm->status = VM_STATUS_END_OF_MEMORY;
+            return VM_STATUS_END_OF_MEMORY; /* program counter overflow */
         }
 
         word_t shifted = (word_t) byte;
@@ -99,7 +104,8 @@ vm_op_lda (struct VM *vm)
     /* load data */
     vm->register_a = vm->memory[address];
 
-    return 1;
+    vm->status = VM_STATUS_OK;
+    return VM_STATUS_OK;
 }
 
 int
@@ -109,13 +115,15 @@ vm_op_add (struct VM *vm)
     word_t room = WORD_T_MAX - vm->register_a;
     if (vm->register_b > room)
     {
-        return 0;
+        vm->status = VM_STATUS_OVERFLOW;
+        return VM_STATUS_OVERFLOW;
     }
 
     word_t result = vm->register_a + vm->register_b;
     vm->register_a = result;
 
-    return 1;
+    vm->status = VM_STATUS_OK;
+    return VM_STATUS_OK;
 }
 
 int
@@ -124,11 +132,13 @@ vm_op_sub (struct VM *vm)
     /* detect overflow */
     if (vm->register_a < vm->register_b)
     {
-        return 0;
+        vm->status = VM_STATUS_OVERFLOW;
+        return VM_STATUS_OVERFLOW;
     }
 
     word_t result = vm->register_a - vm->register_b;
     vm->register_a = result;
 
-    return 1;
+    vm->status = VM_STATUS_OK;
+    return VM_STATUS_OK;
 }

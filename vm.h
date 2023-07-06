@@ -11,11 +11,16 @@ typedef uint16_t word_t;
 #define WORD_T_MAX UINT16_MAX
 #define VM_MEMORY_SIZE ((uint_least16_t) WORD_T_MAX + 1)
 
+#define VM_STATUS_OK 0            /* nothing */
+#define VM_STATUS_OVERFLOW 1      /* any operation overflows */
+#define VM_STATUS_END_OF_MEMORY 2 /* program counter reached end of memory */
+
 struct VM
 {
-    word_t program_counter;
-    word_t register_a;
-    word_t register_b;
+    word_t program_counter; /* "address" (index) of current instruction byte*/
+    word_t status;          /* status register */
+    word_t register_a;      /* user register A */
+    word_t register_b;      /* user register B */
 
     byte_t memory[VM_MEMORY_SIZE];
 };
@@ -26,33 +31,39 @@ print_binary (void *data, size_t bytes);
 
 /* Reads the byte in memory pointed to by the program counter,
    then increments the program counter.
-   Returns 0 instead if the program counter would overflow,
-   1 otherwise. */
+   Sets and returns status codes:
+   - `VM_STATUS_OK` if ok,
+   - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory */
 int
 vm_read_byte (byte_t *result, struct VM *vm);
 
 /* Reads the word in memory pointed to by the program counter,
    and loads that memory value into register A (little-endian).
-   The program counter is incremented for each byte read.
-   Returns 0 if the 2 bytes couldn't be loaded (program counter overflow).
-   Returns 1 otherwise. */
+   Sets and returns status codes:
+   - `VM_STATUS_OK` if ok,
+   - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory */
 int
 vm_read_word (word_t *result, struct VM *vm);
 
 /* Uses the next 2 bytes after the instruction as an absolute address,
    (little-endian) and loads that memory value into register A.
-   Returns 0 if the 2 bytes couldn't be loaded (program counter overflow).
-   Returns 1 otherwise. */
+   Sets and returns status codes:
+   - `VM_STATUS_OK` if ok,
+   - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory */
 int
 vm_op_lda (struct VM *vm);
 
 /* Adds registers A and B, storing to A.
-   Returns 0 on overflow, 1 otherwise. */
+   Sets and returns status codes:
+   - `VM_STATUS_OK` if ok,
+   - `VM_STATUS_OVERFLOW` if addition overflows */
 int
 vm_op_add (struct VM *vm);
 
 /* Subtracts register B from A, storing to A.
-   Returns 0 on overflow, 1 otherwise.*/
+   Sets and returns status codes:
+   - `VM_STATUS_OK` if ok,
+   - `VM_STATUS_OVERFLOW` if subtraction overflows */
 int
 vm_op_sub (struct VM *vm);
 
