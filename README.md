@@ -18,6 +18,8 @@ For now it's just: `gcc test_vm.c vm.c`
 
 ## TODO
 
+- restructure tests
+- reduce code repetition (need constants to represent registers)
 - decide opcodes + instruction format
 - bitwise ops
 - register ops (swap, copy, load)
