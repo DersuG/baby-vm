@@ -45,7 +45,8 @@ vm_read_byte (byte_t *result, struct VM *vm);
 int
 vm_read_word (word_t *result, struct VM *vm);
 
-/* Uses the next 2 bytes after the instruction as an absolute address,
+/* Load A
+   Uses the next 2 bytes after the instruction as an absolute address,
    (little-endian) and loads the byte at that location into register A.
    Sets and returns status codes:
    - `VM_STATUS_OK` if ok,
@@ -53,7 +54,8 @@ vm_read_word (word_t *result, struct VM *vm);
 int
 vm_op_lda (struct VM *vm);
 
-/* Uses the next 2 bytes after the instruction as an absolute address,
+/* Load B
+   Uses the next 2 bytes after the instruction as an absolute address,
    (little-endian) and loads the byte at that location into register B.
    Sets and returns status codes:
    - `VM_STATUS_OK` if ok,
@@ -61,7 +63,8 @@ vm_op_lda (struct VM *vm);
 int
 vm_op_ldb (struct VM *vm);
 
-/* Uses the next 2 bytes after the instruction as an absolute address,
+/* Load Word A
+   Uses the next 2 bytes after the instruction as an absolute address,
    (little-endian) and loads the word at that location into register A
    (also little-endian).
    Sets and returns status codes:
@@ -71,7 +74,8 @@ vm_op_ldb (struct VM *vm);
 int
 vm_op_lwa (struct VM *vm);
 
-/* Uses the next 2 bytes after the instruction as an absolute address,
+/* Load Word B
+   Uses the next 2 bytes after the instruction as an absolute address,
    (little-endian) and loads the word at that location into register B
    (also little-endian).
    Sets and returns status codes:
@@ -81,14 +85,16 @@ vm_op_lwa (struct VM *vm);
 int
 vm_op_lwb (struct VM *vm);
 
-/* Adds registers A and B, storing to A.
+/* Add
+   Adds registers A and B, storing to A.
    Sets and returns status codes:
    - `VM_STATUS_OK` if ok,
    - `VM_STATUS_OVERFLOW` if addition overflows */
 int
 vm_op_add (struct VM *vm);
 
-/* Subtracts register B from A, storing to A.
+/* Subtract
+   Subtracts register B from A, storing to A.
    Sets and returns status codes:
    - `VM_STATUS_OK` if ok,
    - `VM_STATUS_OVERFLOW` if subtraction overflows */

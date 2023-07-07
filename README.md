@@ -16,6 +16,20 @@ For now it's just: `gcc test_vm.c vm.c`
 - 1-word status register
 - 2 1-word user registers (A and B)
 
+## Instruction set
+
+- `<byte>`: 1 byte
+- `<address>`: a 1-word absolute memory address (little-endian)
+
+| instruction/format | status codes                              | description |
+|--------------------|-------------------------------------------|-------------|
+| `lda <address>`    | `VM_STATUS_OK`, `VM_STATUS_END_OF_MEMORY` | loads the byte at the address into register A |
+| `ldb <address>`    | `VM_STATUS_OK`, `VM_STATUS_END_OF_MEMORY` | loads the byte at the address into register B |
+| `lwa <address>`    | `VM_STATUS_OK`, `VM_STATUS_END_OF_MEMORY` | loads the word at the address into register A |
+| `lwb <address>`    | `VM_STATUS_OK`, `VM_STATUS_END_OF_MEMORY` | loads the word at the address into register B |
+| `add`              | `VM_STATUS_OK`, `VM_STATUS_OVERFLOW`      | adds register A to register B, storing result in register A |
+| `sub`              | `VM_STATUS_OK`, `VM_STATUS_OVERFLOW`      | subtracts register A to register B, storing result in register A |
+
 ## TODO
 
 - restructure tests
