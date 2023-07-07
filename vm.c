@@ -143,6 +143,33 @@ vm_op_lwa (struct VM *vm)
 }
 
 int
+vm_op_lwb (struct VM *vm)
+{
+    word_t address;
+    vm->status = vm_read_word(&address, vm);
+    if (vm->status != VM_STATUS_OK)
+    {
+        return vm->status;
+    }
+
+    /* check for overflow */
+    if (address > VM_MEMORY_SIZE - sizeof (vm->register_b))
+    {
+        vm->status = VM_STATUS_END_OF_MEMORY;
+        return VM_STATUS_END_OF_MEMORY;
+    }
+
+    vm->register_b = 0;
+    for (int i = 0; i < sizeof (vm->register_b); i++)
+    {
+        /* already checked for overflow */
+        vm->register_b |= vm->memory[address + i] << (i * 8);
+    }
+
+    return VM_STATUS_OK;
+}
+
+int
 vm_op_add (struct VM *vm)
 {
     /* load 1-word address */
