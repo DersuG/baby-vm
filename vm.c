@@ -100,6 +100,20 @@ vm_op_lda (struct VM *vm)
     return VM_STATUS_OK;
 }
 
+int vm_op_ldb (struct VM *vm)
+{
+    word_t address;
+    vm->status = vm_read_word (&address, vm);
+    if (vm->status != VM_STATUS_OK)
+    {
+        return vm->status;
+    }
+
+    vm->register_b = vm->memory[address];
+
+    return VM_STATUS_OK;
+}
+
 int
 vm_op_add (struct VM *vm)
 {

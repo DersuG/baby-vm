@@ -69,6 +69,26 @@ test_vm_op_lda (byte_t *initial_memory, size_t initial_memory_size,
 }
 
 void
+test_vm_op_ldb (byte_t *initial_memory, size_t initial_memory_size,
+                word_t initial_program_counter, byte_t expected,
+                int expected_status)
+{
+    struct VM vm;
+    for (int i = 0; i < initial_memory_size; i++)
+    {
+        vm.memory[i] = initial_memory[i];
+    }
+    vm.program_counter = initial_program_counter;
+
+    assert (vm_op_ldb (&vm) == expected_status);
+    assert (vm.status == expected_status);
+    if (expected_status == VM_STATUS_OK)
+    {
+        assert (vm.register_b == expected);
+    }
+}
+
+void
 test_vm_op_add (word_t a, word_t b, word_t expected, int expected_status)
 {
     struct VM vm;
@@ -135,6 +155,17 @@ main (void)
         test_vm_op_lda (m3, 2, 0, 0x00u, VM_STATUS_OK);
         byte_t m4[VM_MEMORY_SIZE];
         test_vm_op_lda (m4, VM_MEMORY_SIZE, WORD_T_MAX, 0x00u, VM_STATUS_END_OF_MEMORY);
+    }
+
+    {
+        byte_t m1[3] = {0x02u, 0x00u, 0xffu};
+        test_vm_op_ldb (m1, 3, 0, 0xffu, VM_STATUS_OK);
+        byte_t m2[5] = {0x00u, 0xffu, 0x00u, 0x01u, 0x00u};
+        test_vm_op_ldb (m2, 5, 3, 0xffu, VM_STATUS_OK);
+        byte_t m3[2] = {0x00u, 0x00u};
+        test_vm_op_ldb (m3, 2, 0, 0x00u, VM_STATUS_OK);
+        byte_t m4[VM_MEMORY_SIZE];
+        test_vm_op_ldb (m4, VM_MEMORY_SIZE, WORD_T_MAX, 0x00u, VM_STATUS_END_OF_MEMORY);
     }
 
     test_vm_op_add (0, 0, 0, VM_STATUS_OK);
