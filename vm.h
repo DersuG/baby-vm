@@ -61,6 +61,16 @@ vm_op_lda (struct VM *vm);
 int
 vm_op_ldb (struct VM *vm);
 
+/* Uses the next 2 bytes after the instruction as an absolute address,
+   (little-endian) and loads the word at that location into register B
+   (also little-endian).
+   Sets and returns status codes:
+   - `VM_STATUS_OK` if ok,
+   - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory,
+     or if the address points to memory which can't hold a full word. */
+int
+vm_op_lwa (struct VM *vm);
+
 /* Adds registers A and B, storing to A.
    Sets and returns status codes:
    - `VM_STATUS_OK` if ok,

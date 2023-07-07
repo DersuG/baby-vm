@@ -89,6 +89,26 @@ test_vm_op_ldb (byte_t *initial_memory, size_t initial_memory_size,
 }
 
 void
+test_vm_op_lwa (byte_t *initial_memory, size_t initial_memory_size,
+                word_t initial_program_counter, word_t expected,
+                int expected_status)
+{
+    struct VM vm;
+    for (int i = 0; i < initial_memory_size; i++)
+    {
+        vm.memory[i] = initial_memory[i];
+    }
+    vm.program_counter = initial_program_counter;
+
+    assert (vm_op_lwa (&vm) == expected_status);
+    assert (vm.status == expected_status);
+    if (expected_status == VM_STATUS_OK)
+    {
+        assert (vm.register_a == expected);
+    }
+}
+
+void
 test_vm_op_add (word_t a, word_t b, word_t expected, int expected_status)
 {
     struct VM vm;
@@ -166,6 +186,31 @@ main (void)
         test_vm_op_ldb (m3, 2, 0, 0x00u, VM_STATUS_OK);
         byte_t m4[VM_MEMORY_SIZE];
         test_vm_op_ldb (m4, VM_MEMORY_SIZE, WORD_T_MAX, 0x00u, VM_STATUS_END_OF_MEMORY);
+    }
+
+    {
+        byte_t m1[4] = {0x02u, 0x00u, 0xffu, 0xeeu};
+        test_vm_op_lwa(m1, 4, 0, 0xeeffu, VM_STATUS_OK);
+        byte_t m2[5] = {0x00u, 0xffu, 0xeeu, 0x01u, 0x00u};
+        test_vm_op_lwa(m2, 5, 3, 0xeeffu, VM_STATUS_OK);
+        byte_t m3[2] = {0x00u, 0x00u};
+        test_vm_op_lwa(m3, 2, 0, 0x0000u, VM_STATUS_OK);
+        byte_t m4[VM_MEMORY_SIZE];
+        test_vm_op_lwa(m4, VM_MEMORY_SIZE, WORD_T_MAX, 0x0000u, VM_STATUS_END_OF_MEMORY);
+        byte_t m5[VM_MEMORY_SIZE];
+        for (int i = 0; i < sizeof (word_t); i++) {
+            word_t mask = 0xffu << (i * 8);
+            m5[i] = ((WORD_T_MAX - 1) & mask) >> (i * 8);
+        }
+        m5[WORD_T_MAX - 1] = 0xff;
+        m5[WORD_T_MAX] = 0xee;
+        test_vm_op_lwa(m5, VM_MEMORY_SIZE, 0, 0xeeffu, VM_STATUS_OK);
+        byte_t m6[VM_MEMORY_SIZE];
+        for (int i = 0; i < sizeof (word_t); i++) {
+            word_t mask = 0xffu << (i * 8);
+            m6[i] = (WORD_T_MAX & mask) >> (i * 8);
+        }
+        test_vm_op_lwa(m6, VM_MEMORY_SIZE, 0, 0x0000u, VM_STATUS_END_OF_MEMORY);
     }
 
     test_vm_op_add (0, 0, 0, VM_STATUS_OK);

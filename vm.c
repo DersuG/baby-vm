@@ -100,7 +100,8 @@ vm_op_lda (struct VM *vm)
     return VM_STATUS_OK;
 }
 
-int vm_op_ldb (struct VM *vm)
+int
+vm_op_ldb (struct VM *vm)
 {
     word_t address;
     vm->status = vm_read_word (&address, vm);
@@ -110,6 +111,33 @@ int vm_op_ldb (struct VM *vm)
     }
 
     vm->register_b = vm->memory[address];
+
+    return VM_STATUS_OK;
+}
+
+int
+vm_op_lwa (struct VM *vm)
+{
+    word_t address;
+    vm->status = vm_read_word(&address, vm);
+    if (vm->status != VM_STATUS_OK)
+    {
+        return vm->status;
+    }
+
+    /* check for overflow */
+    if (address > VM_MEMORY_SIZE - sizeof (vm->register_a))
+    {
+        vm->status = VM_STATUS_END_OF_MEMORY;
+        return VM_STATUS_END_OF_MEMORY;
+    }
+
+    vm->register_a = 0;
+    for (int i = 0; i < sizeof (vm->register_a); i++)
+    {
+        /* already checked for overflow */
+        vm->register_a |= vm->memory[address + i] << (i * 8);
+    }
 
     return VM_STATUS_OK;
 }
