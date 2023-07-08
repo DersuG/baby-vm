@@ -68,7 +68,7 @@ vm_read_word (word_t *result, struct VM *vm)
     *result = 0;
 
     /* get bytes (little endian) */
-    for (int i = 0; i < sizeof (*result); i++)
+    for (size_t i = 0; i < sizeof (*result); i++)
     {
         byte_t byte;
         if (vm_read_byte (&byte, vm) == VM_STATUS_END_OF_MEMORY)
@@ -133,7 +133,7 @@ vm_op_lwa (struct VM *vm)
     }
 
     vm->register_a = 0;
-    for (int i = 0; i < sizeof (vm->register_a); i++)
+    for (size_t i = 0; i < sizeof (vm->register_a); i++)
     {
         /* already checked for overflow */
         vm->register_a |= vm->memory[address + i] << (i * 8);
@@ -160,7 +160,7 @@ vm_op_lwb (struct VM *vm)
     }
 
     vm->register_b = 0;
-    for (int i = 0; i < sizeof (vm->register_b); i++)
+    for (size_t i = 0; i < sizeof (vm->register_b); i++)
     {
         /* already checked for overflow */
         vm->register_b |= vm->memory[address + i] << (i * 8);
@@ -201,5 +201,19 @@ vm_op_sub (struct VM *vm)
     vm->register_a = result;
 
     vm->status = VM_STATUS_OK;
+    return VM_STATUS_OK;
+}
+
+int
+vm_op_jmp(struct VM *vm)
+{
+    word_t address;
+    vm->status = vm_read_word (&address, vm);
+    if (vm->status != VM_STATUS_OK)
+    {
+        return vm->status;
+    }
+
+    vm->program_counter = address;
     return VM_STATUS_OK;
 }

@@ -8,7 +8,7 @@ test_vm_read_byte (byte_t *initial_memory, size_t initial_memory_size,
                    int expected_status)
 {
     struct VM vm;
-    for (int i = 0; i < initial_memory_size; i++)
+    for (size_t i = 0; i < initial_memory_size; i++)
     {
         vm.memory[i] = initial_memory[i];
     }
@@ -31,7 +31,7 @@ test_vm_read_word (byte_t *initial_memory, size_t initial_memory_size,
                    int expected_status)
 {
     struct VM vm;
-    for (int i = 0; i < initial_memory_size; i++)
+    for (size_t i = 0; i < initial_memory_size; i++)
     {
         vm.memory[i] = initial_memory[i];
     }
@@ -54,7 +54,7 @@ test_vm_op_lda (byte_t *initial_memory, size_t initial_memory_size,
                 int expected_status)
 {
     struct VM vm;
-    for (int i = 0; i < initial_memory_size; i++)
+    for (size_t i = 0; i < initial_memory_size; i++)
     {
         vm.memory[i] = initial_memory[i];
     }
@@ -74,7 +74,7 @@ test_vm_op_ldb (byte_t *initial_memory, size_t initial_memory_size,
                 int expected_status)
 {
     struct VM vm;
-    for (int i = 0; i < initial_memory_size; i++)
+    for (size_t i = 0; i < initial_memory_size; i++)
     {
         vm.memory[i] = initial_memory[i];
     }
@@ -94,7 +94,7 @@ test_vm_op_lwa (byte_t *initial_memory, size_t initial_memory_size,
                 int expected_status)
 {
     struct VM vm;
-    for (int i = 0; i < initial_memory_size; i++)
+    for (size_t i = 0; i < initial_memory_size; i++)
     {
         vm.memory[i] = initial_memory[i];
     }
@@ -114,7 +114,7 @@ test_vm_op_lwb (byte_t *initial_memory, size_t initial_memory_size,
                 int expected_status)
 {
     struct VM vm;
-    for (int i = 0; i < initial_memory_size; i++)
+    for (size_t i = 0; i < initial_memory_size; i++)
     {
         vm.memory[i] = initial_memory[i];
     }
@@ -155,6 +155,26 @@ test_vm_op_sub (word_t a, word_t b, word_t expected, int expected_status)
     if (expected_status == VM_STATUS_OK)
     {
         assert (vm.register_a == expected);
+    }
+}
+
+void
+test_vm_op_jmp (byte_t *initial_memory, size_t initial_memory_size,
+                word_t initial_program_counter, word_t expected_program_counter,
+                int expected_status)
+{
+    struct VM vm;
+    for (size_t i = 0; i < initial_memory_size; i++)
+    {
+        vm.memory[i] = initial_memory[i];
+    }
+    vm.program_counter = initial_program_counter;
+
+    assert (vm_op_jmp(&vm) == expected_status);
+    assert (vm.status == expected_status);
+    if (expected_status == VM_STATUS_OK)
+    {
+        assert (vm.program_counter == expected_program_counter);
     }
 }
 
@@ -218,7 +238,7 @@ main (void)
         byte_t m4[VM_MEMORY_SIZE];
         test_vm_op_lwa(m4, VM_MEMORY_SIZE, WORD_T_MAX, 0x0000u, VM_STATUS_END_OF_MEMORY);
         byte_t m5[VM_MEMORY_SIZE];
-        for (int i = 0; i < sizeof (word_t); i++) {
+        for (size_t i = 0; i < sizeof (word_t); i++) {
             word_t mask = 0xffu << (i * 8);
             m5[i] = ((WORD_T_MAX - 1) & mask) >> (i * 8);
         }
@@ -226,7 +246,7 @@ main (void)
         m5[WORD_T_MAX] = 0xee;
         test_vm_op_lwa(m5, VM_MEMORY_SIZE, 0, 0xeeffu, VM_STATUS_OK);
         byte_t m6[VM_MEMORY_SIZE];
-        for (int i = 0; i < sizeof (word_t); i++) {
+        for (size_t i = 0; i < sizeof (word_t); i++) {
             word_t mask = 0xffu << (i * 8);
             m6[i] = (WORD_T_MAX & mask) >> (i * 8);
         }
@@ -243,7 +263,7 @@ main (void)
         byte_t m4[VM_MEMORY_SIZE];
         test_vm_op_lwb(m4, VM_MEMORY_SIZE, WORD_T_MAX, 0x0000u, VM_STATUS_END_OF_MEMORY);
         byte_t m5[VM_MEMORY_SIZE];
-        for (int i = 0; i < sizeof (word_t); i++) {
+        for (size_t i = 0; i < sizeof (word_t); i++) {
             word_t mask = 0xffu << (i * 8);
             m5[i] = ((WORD_T_MAX - 1) & mask) >> (i * 8);
         }
@@ -251,7 +271,7 @@ main (void)
         m5[WORD_T_MAX] = 0xee;
         test_vm_op_lwa(m5, VM_MEMORY_SIZE, 0, 0xeeffu, VM_STATUS_OK);
         byte_t m6[VM_MEMORY_SIZE];
-        for (int i = 0; i < sizeof (word_t); i++) {
+        for (size_t i = 0; i < sizeof (word_t); i++) {
             word_t mask = 0xffu << (i * 8);
             m6[i] = (WORD_T_MAX & mask) >> (i * 8);
         }
@@ -270,6 +290,15 @@ main (void)
     test_vm_op_sub (WORD_T_MAX, 0, WORD_T_MAX, VM_STATUS_OK);
     test_vm_op_sub (WORD_T_MAX, WORD_T_MAX, 0, VM_STATUS_OK);
     test_vm_op_sub (0, WORD_T_MAX, 0, VM_STATUS_OVERFLOW);
+
+    {
+        byte_t m1[3] = {0x02u, 0x00u, 0xffu};
+        test_vm_op_jmp(m1, 3, 0, 0x0002u, 0);
+        byte_t m2[3] = {0xff, 0x00, 0x00};
+        test_vm_op_jmp(m2, 3, 1, 0, 0);
+        byte_t m3[VM_MEMORY_SIZE];
+        test_vm_op_jmp(m3, VM_MEMORY_SIZE, WORD_T_MAX, 0, VM_STATUS_END_OF_MEMORY);
+    }
 
     return 0;
 }

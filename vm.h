@@ -101,4 +101,13 @@ vm_op_add (struct VM *vm);
 int
 vm_op_sub (struct VM *vm);
 
+/* Unconditional Jump
+   Uses the next 2 bytes after the instruction as an absolute address, and sets
+   the program counter to it.
+   Sets and returns status codes:
+   - `VM_STATUS_OK` if ok
+   - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory */
+int
+vm_op_jmp(struct VM *vm);
+
 #endif /* VM_H */
