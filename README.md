@@ -21,14 +21,16 @@ For now it's just: `gcc test_vm.c vm.c`
 - `<byte>`: 1 byte
 - `<address>`: a 1-word absolute memory address (little-endian)
 
-| instruction/format | status codes                              | description |
-|--------------------|-------------------------------------------|-------------|
-| `lda <address>`    | `VM_STATUS_OK`, `VM_STATUS_END_OF_MEMORY` | loads the byte at the address into register A |
-| `ldb <address>`    | `VM_STATUS_OK`, `VM_STATUS_END_OF_MEMORY` | loads the byte at the address into register B |
-| `lwa <address>`    | `VM_STATUS_OK`, `VM_STATUS_END_OF_MEMORY` | loads the word at the address into register A |
-| `lwb <address>`    | `VM_STATUS_OK`, `VM_STATUS_END_OF_MEMORY` | loads the word at the address into register B |
-| `add`              | `VM_STATUS_OK`, `VM_STATUS_OVERFLOW`      | adds register A to register B, storing result in register A |
-| `sub`              | `VM_STATUS_OK`, `VM_STATUS_OVERFLOW`      | subtracts register A to register B, storing result in register A |
+| instruction/format | opcode | status codes                              | description |
+|--------------------|--------|-------------------------------------------|-------------|
+| `lda <address>`    | `0xA1` | `VM_STATUS_OK`, `VM_STATUS_END_OF_MEMORY` | loads the byte at the address into register A |
+| `ldb <address>`    | `0xB1` | `VM_STATUS_OK`, `VM_STATUS_END_OF_MEMORY` | loads the byte at the address into register B |
+| `lwa <address>`    | `0xA2` | `VM_STATUS_OK`, `VM_STATUS_END_OF_MEMORY` | loads the word at the address into register A |
+| `lwb <address>`    | `0xB2` | `VM_STATUS_OK`, `VM_STATUS_END_OF_MEMORY` | loads the word at the address into register B |
+| `add`              | `0x10` | `VM_STATUS_OK`, `VM_STATUS_OVERFLOW`      | adds register A to register B, storing result in register A |
+| `sub`              | `0x11` | `VM_STATUS_OK`, `VM_STATUS_OVERFLOW`      | subtracts register A to register B, storing result in register A |
+| `jcm <address1> <address2> <address3>` | `0x20` | `VM_STATUS_OK`        | compares register A to register B and jumps to first address if A&lt;B, second address if A=B, and third address if A&gt;B |
+| `jer <address>`    | `0x21` | `VM_STATUS_OK`                            | jumps to address if status register is not `VM_STATUS_OK` |
 
 ## TODO
 
