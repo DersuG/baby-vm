@@ -25,6 +25,10 @@ struct VM
     byte_t memory[VM_MEMORY_SIZE];
 };
 
+/* resets the vm to an initial state */
+void
+vm_reset (struct VM *vm);
+
 /* Prints up to size_t bytes in binary, doesn't account for endianness. */
 void
 print_binary (void *data, size_t bytes);

@@ -2,6 +2,19 @@
 #include <stdio.h>
 #include <stdint.h>
 
+void
+vm_reset (struct VM *vm)
+{
+    vm->program_counter = 0;
+    vm->status = VM_STATUS_OK;
+    vm->register_a = 0;
+    vm->register_b = 0;
+    for (size_t i = 0; i < sizeof (vm->memory); i++)
+    {
+        vm->memory[i] = 0;
+    }
+}
+
 /* prints 1 byte as binary (so 0xf0 becomes "11110000") */
 void
 print_byte_as_binary (unsigned char byte)
