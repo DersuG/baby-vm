@@ -110,4 +110,15 @@ vm_op_sub (struct VM *vm);
 int
 vm_op_jmp(struct VM *vm);
 
+/* 3-Way Conditional Jump
+   Uses the next 6 bytes after the instruction as 3 absolute addresses. If
+   register A < register B, jumps to the first address. If register A ==
+   register B, jumps to the second address. If register A > register B, jumps
+   to the third address.
+   Sets and returns status codes:
+   - `VM_STATUS_OK` if ok
+   - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory */
+int
+vm_op_jcm (struct VM *vm);
+
 #endif /* VM_H */

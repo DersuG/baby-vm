@@ -205,7 +205,7 @@ vm_op_sub (struct VM *vm)
 }
 
 int
-vm_op_jmp(struct VM *vm)
+vm_op_jmp (struct VM *vm)
 {
     word_t address;
     vm->status = vm_read_word (&address, vm);
@@ -215,5 +215,46 @@ vm_op_jmp(struct VM *vm)
     }
 
     vm->program_counter = address;
+    return VM_STATUS_OK;
+}
+
+int
+vm_op_jcm (struct VM *vm)
+{
+    word_t lt_address;
+    word_t eq_address;
+    word_t gt_address;
+
+    vm->status = vm_read_word (&lt_address, vm);
+    if (vm->status != VM_STATUS_OK)
+    {
+        return vm->status;
+    }
+
+    vm->status = vm_read_word (&eq_address, vm);
+    if (vm->status != VM_STATUS_OK)
+    {
+        return vm->status;
+    }
+
+    vm->status = vm_read_word (&gt_address, vm);
+    if (vm->status != VM_STATUS_OK)
+    {
+        return vm->status;
+    }
+
+    if (vm->register_a < vm->register_b)
+    {
+        vm->program_counter = lt_address;
+    }
+    else if (vm->register_a == vm->register_b)
+    {
+        vm->program_counter = eq_address;
+    }
+    else
+    {
+        vm->program_counter = gt_address;
+    }
+
     return VM_STATUS_OK;
 }
