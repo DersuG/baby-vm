@@ -188,7 +188,6 @@ vm_op_lwb (struct VM *vm)
     for (size_t i = 0; i < sizeof (vm->register_b); i++)
     {
         /* already checked for overflow */
-        // vm->register_b |= vm->memory[address + i] << (i * 8);
         vm->register_b |= vm_read_memory(vm, address + i) << (i * 8);
     }
 
