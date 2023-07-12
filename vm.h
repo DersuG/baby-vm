@@ -11,9 +11,13 @@ typedef uint16_t word_t;
 #define WORD_T_MAX UINT16_MAX
 #define VM_MEMORY_SIZE ((uint_least16_t) WORD_T_MAX + 1)
 
+/* Add 2 `word_t` values together. If this would overflow, the result will be
+   properly wrapped around. */
+word_t
+word_t_add (word_t a, word_t b);
+
 #define VM_STATUS_OK 0            /* nothing */
 #define VM_STATUS_OVERFLOW 1      /* any operation overflows */
-#define VM_STATUS_END_OF_MEMORY 2 /* program counter reached end of memory */
 
 struct VM
 {
@@ -41,19 +45,22 @@ vm_read_memory (struct VM *vm, word_t address);
 void
 vm_write_memory (struct VM *vm, word_t address, byte_t data);
 
+/* Increases the program counter by some amount. If it overflows, it will wrap
+   around properly. */
+void
+vm_add_program_counter (struct VM *vm, word_t amount);
+
 /* Reads the byte in memory pointed to by the program counter,
    then increments the program counter.
    Sets and returns status codes:
-   - `VM_STATUS_OK` if ok,
-   - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory */
+   - `VM_STATUS_OK` if ok */
 int
 vm_read_byte (byte_t *result, struct VM *vm);
 
 /* Reads the word in memory pointed to by the program counter,
    and loads that memory value into register A (little-endian).
    Sets and returns status codes:
-   - `VM_STATUS_OK` if ok,
-   - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory */
+   - `VM_STATUS_OK` if ok */
 int
 vm_read_word (word_t *result, struct VM *vm);
 
@@ -61,8 +68,7 @@ vm_read_word (word_t *result, struct VM *vm);
    Uses the next 2 bytes after the instruction as an absolute address,
    (little-endian) and loads the byte at that location into register A.
    Sets and returns status codes:
-   - `VM_STATUS_OK` if ok,
-   - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory */
+   - `VM_STATUS_OK` if ok */
 int
 vm_op_lda (struct VM *vm);
 
@@ -70,8 +76,7 @@ vm_op_lda (struct VM *vm);
    Uses the next 2 bytes after the instruction as an absolute address,
    (little-endian) and loads the byte at that location into register B.
    Sets and returns status codes:
-   - `VM_STATUS_OK` if ok,
-   - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory */
+   - `VM_STATUS_OK` if ok */
 int
 vm_op_ldb (struct VM *vm);
 
@@ -80,9 +85,7 @@ vm_op_ldb (struct VM *vm);
    (little-endian) and loads the word at that location into register A
    (also little-endian).
    Sets and returns status codes:
-   - `VM_STATUS_OK` if ok,
-   - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory,
-     or if the address points to memory which can't hold a full word. */
+   - `VM_STATUS_OK` if ok */
 int
 vm_op_lwa (struct VM *vm);
 
@@ -91,9 +94,7 @@ vm_op_lwa (struct VM *vm);
    (little-endian) and loads the word at that location into register B
    (also little-endian).
    Sets and returns status codes:
-   - `VM_STATUS_OK` if ok,
-   - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory,
-     or if the address points to memory which can't hold a full word. */
+   - `VM_STATUS_OK` if ok */
 int
 vm_op_lwb (struct VM *vm);
 
@@ -117,8 +118,7 @@ vm_op_sub (struct VM *vm);
    Uses the next 2 bytes after the instruction as an absolute address, and sets
    the program counter to it.
    Sets and returns status codes:
-   - `VM_STATUS_OK` if ok
-   - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory */
+   - `VM_STATUS_OK` if ok */
 int
 vm_op_jmp(struct VM *vm);
 
@@ -128,8 +128,7 @@ vm_op_jmp(struct VM *vm);
    register B, jumps to the second address. If register A > register B, jumps
    to the third address.
    Sets and returns status codes:
-   - `VM_STATUS_OK` if ok
-   - `VM_STATUS_END_OF_MEMORY` if program counter reaches end of memory */
+   - `VM_STATUS_OK` if ok */
 int
 vm_op_jcm (struct VM *vm);
 

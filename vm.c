@@ -2,6 +2,18 @@
 #include <stdio.h>
 #include <stdint.h>
 
+word_t
+word_t_add (word_t a, word_t b)
+{
+    /* TODO: do this properly */
+    uint64_t result = (uint32_t) a + (uint64_t) b;
+    while (result > WORD_T_MAX)
+    {
+        result -= WORD_T_MAX;
+    }
+    return result;
+}
+
 void
 vm_reset (struct VM *vm)
 {
@@ -69,18 +81,17 @@ vm_print (struct VM *vm)
     printf (" 0x%x %d\n", vm->register_b, vm->register_b);
 }
 
+void
+vm_program_counter_add (struct VM *vm, word_t amount)
+{
+    vm->program_counter = word_t_add(vm->program_counter, amount);
+}
+
 int
 vm_read_byte (byte_t *result, struct VM *vm)
 {
-    /* detect overflow */
-    if (vm->program_counter >= WORD_T_MAX)
-    {
-        vm->status = VM_STATUS_END_OF_MEMORY;
-        return VM_STATUS_END_OF_MEMORY;
-    }
-
     *result = vm->memory[vm->program_counter];
-    vm->program_counter++;
+    vm_program_counter_add(vm, 1);
 
     vm->status = VM_STATUS_OK;
     return VM_STATUS_OK;
@@ -96,11 +107,7 @@ vm_read_word (word_t *result, struct VM *vm)
     for (size_t i = 0; i < sizeof (*result); i++)
     {
         byte_t byte;
-        if (vm_read_byte (&byte, vm) == VM_STATUS_END_OF_MEMORY)
-        {
-            vm->status = VM_STATUS_END_OF_MEMORY;
-            return VM_STATUS_END_OF_MEMORY; /* program counter overflow */
-        }
+        vm_read_byte(&byte, vm);
         word_t shifted = (word_t) byte;
         shifted <<= i * 8;
         *result |= shifted;
@@ -150,18 +157,11 @@ vm_op_lwa (struct VM *vm)
         return vm->status;
     }
 
-    /* check for overflow */
-    if (address > VM_MEMORY_SIZE - sizeof (vm->register_a))
-    {
-        vm->status = VM_STATUS_END_OF_MEMORY;
-        return VM_STATUS_END_OF_MEMORY;
-    }
-
     vm->register_a = 0;
     for (size_t i = 0; i < sizeof (vm->register_a); i++)
     {
-        /* already checked for overflow */
-        vm->register_a |= vm_read_memory(vm, address + i) << (i * 8);
+        vm->register_a |= vm_read_memory(vm, address) << (i * 8);
+        address = word_t_add(address, (word_t) i);
     }
 
     return VM_STATUS_OK;
@@ -177,18 +177,11 @@ vm_op_lwb (struct VM *vm)
         return vm->status;
     }
 
-    /* check for overflow */
-    if (address > VM_MEMORY_SIZE - sizeof (vm->register_b))
-    {
-        vm->status = VM_STATUS_END_OF_MEMORY;
-        return VM_STATUS_END_OF_MEMORY;
-    }
-
     vm->register_b = 0;
     for (size_t i = 0; i < sizeof (vm->register_b); i++)
     {
-        /* already checked for overflow */
-        vm->register_b |= vm_read_memory(vm, address + i) << (i * 8);
+        vm->register_b |= vm_read_memory(vm, address) << (i * 8);
+        address = word_t_add(address, (word_t) i);
     }
 
     return VM_STATUS_OK;

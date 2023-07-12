@@ -189,8 +189,8 @@ main (void)
         byte_t m4[VM_MEMORY_SIZE];
         m4[WORD_T_MAX - 1] = 0x01u;
         test_vm_read_byte (m4, sizeof (m4), WORD_T_MAX - 1, 0x01u, VM_STATUS_OK);
-        byte_t m5[VM_MEMORY_SIZE];
-        test_vm_read_byte (m5, sizeof (m5), WORD_T_MAX, 0x00u, VM_STATUS_END_OF_MEMORY);
+        // // byte_t m5[VM_MEMORY_SIZE];
+        // test_vm_read_byte (m5, sizeof (m5), WORD_T_MAX, 0x00u, VM_STATUS_END_OF_MEMORY);
     }
 
     {
@@ -202,8 +202,8 @@ main (void)
         m4[WORD_T_MAX - 2] = 0xcdu;
         m4[WORD_T_MAX - 1] = 0xabu;
         test_vm_read_word(m4, sizeof (m4), WORD_T_MAX - 2, 0xabcdu, VM_STATUS_OK);
-        byte_t m5[VM_MEMORY_SIZE];
-        test_vm_read_word(m5, sizeof (m5), WORD_T_MAX, 0x0000u, VM_STATUS_END_OF_MEMORY);
+        // byte_t m5[VM_MEMORY_SIZE];
+        // test_vm_read_word(m5, sizeof (m5), WORD_T_MAX, 0x0000u, VM_STATUS_END_OF_MEMORY);
     }
 
     {
@@ -213,8 +213,8 @@ main (void)
         test_vm_op_lda (m2, sizeof (m2), 3, 0xffu, VM_STATUS_OK);
         byte_t m3[2] = {0x00u, 0x00u};
         test_vm_op_lda (m3, sizeof (m3), 0, 0x00u, VM_STATUS_OK);
-        byte_t m4[VM_MEMORY_SIZE];
-        test_vm_op_lda (m4, sizeof (m4), WORD_T_MAX, 0x00u, VM_STATUS_END_OF_MEMORY);
+        // byte_t m4[VM_MEMORY_SIZE];
+        // test_vm_op_lda (m4, sizeof (m4), WORD_T_MAX, 0x00u, VM_STATUS_END_OF_MEMORY);
     }
 
     {
@@ -224,8 +224,8 @@ main (void)
         test_vm_op_ldb (m2, sizeof (m2), 3, 0xffu, VM_STATUS_OK);
         byte_t m3[2] = {0x00u, 0x00u};
         test_vm_op_ldb (m3, sizeof (m3), 0, 0x00u, VM_STATUS_OK);
-        byte_t m4[VM_MEMORY_SIZE];
-        test_vm_op_ldb (m4, sizeof (m4), WORD_T_MAX, 0x00u, VM_STATUS_END_OF_MEMORY);
+        // byte_t m4[VM_MEMORY_SIZE];
+        // test_vm_op_ldb (m4, sizeof (m4), WORD_T_MAX, 0x00u, VM_STATUS_END_OF_MEMORY);
     }
 
     {
@@ -235,8 +235,8 @@ main (void)
         test_vm_op_lwa(m2, sizeof (m2), 3, 0xeeffu, VM_STATUS_OK);
         byte_t m3[2] = {0x00u, 0x00u};
         test_vm_op_lwa(m3, sizeof (m3), 0, 0x0000u, VM_STATUS_OK);
-        byte_t m4[VM_MEMORY_SIZE];
-        test_vm_op_lwa(m4, sizeof (m4), WORD_T_MAX, 0x0000u, VM_STATUS_END_OF_MEMORY);
+        // byte_t m4[VM_MEMORY_SIZE];
+        // test_vm_op_lwa(m4, sizeof (m4), WORD_T_MAX, 0x0000u, VM_STATUS_END_OF_MEMORY);
         byte_t m5[VM_MEMORY_SIZE];
         for (size_t i = 0; i < sizeof (word_t); i++) {
             word_t mask = 0xffu << (i * 8);
@@ -245,12 +245,12 @@ main (void)
         m5[WORD_T_MAX - 1] = 0xff;
         m5[WORD_T_MAX] = 0xee;
         test_vm_op_lwa(m5, sizeof (m5), 0, 0xeeffu, VM_STATUS_OK);
-        byte_t m6[VM_MEMORY_SIZE];
-        for (size_t i = 0; i < sizeof (word_t); i++) {
-            word_t mask = 0xffu << (i * 8);
-            m6[i] = (WORD_T_MAX & mask) >> (i * 8);
-        }
-        test_vm_op_lwa(m6, sizeof (m6), 0, 0x0000u, VM_STATUS_END_OF_MEMORY);
+        // byte_t m6[VM_MEMORY_SIZE];
+        // for (size_t i = 0; i < sizeof (word_t); i++) {
+        //     word_t mask = 0xffu << (i * 8);
+        //     m6[i] = (WORD_T_MAX & mask) >> (i * 8);
+        // }
+        // test_vm_op_lwa(m6, sizeof (m6), 0, 0x0000u, VM_STATUS_END_OF_MEMORY);
     }
 
     {
@@ -260,8 +260,8 @@ main (void)
         test_vm_op_lwb(m2, sizeof (m2), 3, 0xeeffu, VM_STATUS_OK);
         byte_t m3[2] = {0x00u, 0x00u};
         test_vm_op_lwb(m3, sizeof (m3), 0, 0x0000u, VM_STATUS_OK);
-        byte_t m4[VM_MEMORY_SIZE];
-        test_vm_op_lwb(m4, sizeof (m4), WORD_T_MAX, 0x0000u, VM_STATUS_END_OF_MEMORY);
+        // byte_t m4[VM_MEMORY_SIZE];
+        // test_vm_op_lwb(m4, sizeof (m4), WORD_T_MAX, 0x0000u, VM_STATUS_END_OF_MEMORY);
         byte_t m5[VM_MEMORY_SIZE];
         for (size_t i = 0; i < sizeof (word_t); i++) {
             word_t mask = 0xffu << (i * 8);
@@ -270,12 +270,12 @@ main (void)
         m5[WORD_T_MAX - 1] = 0xff;
         m5[WORD_T_MAX] = 0xee;
         test_vm_op_lwa(m5, sizeof (m5), 0, 0xeeffu, VM_STATUS_OK);
-        byte_t m6[VM_MEMORY_SIZE];
-        for (size_t i = 0; i < sizeof (word_t); i++) {
-            word_t mask = 0xffu << (i * 8);
-            m6[i] = (WORD_T_MAX & mask) >> (i * 8);
-        }
-        test_vm_op_lwa(m6, sizeof (m6), 0, 0x0000u, VM_STATUS_END_OF_MEMORY);
+        // byte_t m6[VM_MEMORY_SIZE];
+        // for (size_t i = 0; i < sizeof (word_t); i++) {
+        //     word_t mask = 0xffu << (i * 8);
+        //     m6[i] = (WORD_T_MAX & mask) >> (i * 8);
+        // }
+        // test_vm_op_lwa(m6, sizeof (m6), 0, 0x0000u, VM_STATUS_END_OF_MEMORY);
     }
 
     test_vm_op_add (0, 0, 0, VM_STATUS_OK);
@@ -296,8 +296,8 @@ main (void)
         test_vm_op_jmp(m1, sizeof (m1), 0, 0x0002u, 0);
         byte_t m2[3] = {0xff, 0x00, 0x00};
         test_vm_op_jmp(m2, sizeof (m2), 1, 0, 0);
-        byte_t m3[VM_MEMORY_SIZE];
-        test_vm_op_jmp(m3, sizeof (m3), WORD_T_MAX, 0, VM_STATUS_END_OF_MEMORY);
+        // byte_t m3[VM_MEMORY_SIZE];
+        // test_vm_op_jmp(m3, sizeof (m3), WORD_T_MAX, 0, VM_STATUS_END_OF_MEMORY);
     }
 
     return 0;
