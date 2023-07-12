@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include <stdint.h>
 
+/* Prints up to size_t bytes in binary, doesn't account for endianness. */
+void
+print_binary (void *data, size_t bytes);
+
 typedef uint8_t byte_t;
 #define BYTE_T_MAX UINT8_MAX
 
@@ -33,36 +37,29 @@ struct VM
 void
 vm_reset (struct VM *vm);
 
-/* Prints up to size_t bytes in binary, doesn't account for endianness. */
+/* Dumps a vm's registers to stdout. */
 void
-print_binary (void *data, size_t bytes);
+vm_print (struct VM *vm);
 
-/* Reads a byte from memory. */
-byte_t
-vm_read_memory (struct VM *vm, word_t address);
+/* Reads a byte from memory. Sets and returns status codes:
+   - `VM_STATUS_OK` if ok */
+int
+vm_memory_read_byte (struct VM *vm, word_t address, byte_t *result);
 
-/* Writes a byte from memory */
-void
-vm_write_memory (struct VM *vm, word_t address, byte_t data);
+/* Writes a byte from memory. Sets and returns status codes:
+   - `VM_STATUS_OK` if ok */
+int
+vm_memory_write_byte (struct VM *vm, word_t address, byte_t data);
+
+/* Reads a word from memory. Sets and returns status codes:
+   - `VM_STATUS_OK` if ok */
+int
+vm_memory_read_word (struct VM *vm, word_t address, word_t *result);
 
 /* Increases the program counter by some amount. If it overflows, it will wrap
    around properly. */
 void
-vm_add_program_counter (struct VM *vm, word_t amount);
-
-/* Reads the byte in memory pointed to by the program counter,
-   then increments the program counter.
-   Sets and returns status codes:
-   - `VM_STATUS_OK` if ok */
-int
-vm_read_byte (byte_t *result, struct VM *vm);
-
-/* Reads the word in memory pointed to by the program counter,
-   and loads that memory value into register A (little-endian).
-   Sets and returns status codes:
-   - `VM_STATUS_OK` if ok */
-int
-vm_read_word (word_t *result, struct VM *vm);
+vm_program_counter_add (struct VM *vm, word_t amount);
 
 /* Load A
    Uses the next 2 bytes after the instruction as an absolute address,

@@ -3,52 +3,6 @@
 #include "vm.h"
 
 void
-test_vm_read_byte (byte_t *initial_memory, size_t initial_memory_size,
-                   word_t initial_program_counter, byte_t expected,
-                   int expected_status)
-{
-    struct VM vm;
-    for (size_t i = 0; i < initial_memory_size; i++)
-    {
-        vm.memory[i] = initial_memory[i];
-    }
-    vm.program_counter = initial_program_counter;
-
-    byte_t result;
-
-    assert (vm_read_byte (&result, &vm) == expected_status);
-    assert (vm.status == expected_status);
-    if (expected_status == VM_STATUS_OK)
-    {
-        assert (result == expected);
-        assert (vm.program_counter == initial_program_counter + 1);
-    }
-}
-
-void
-test_vm_read_word (byte_t *initial_memory, size_t initial_memory_size,
-                   word_t initial_program_counter, word_t expected,
-                   int expected_status)
-{
-    struct VM vm;
-    for (size_t i = 0; i < initial_memory_size; i++)
-    {
-        vm.memory[i] = initial_memory[i];
-    }
-    vm.program_counter = initial_program_counter;
-
-    word_t result;
-
-    assert (vm_read_word (&result, &vm) == expected_status);
-    assert (vm.status == expected_status);
-    if (expected_status == VM_STATUS_OK)
-    {
-        assert (result == expected);
-        assert (vm.program_counter == initial_program_counter + 2);
-    }
-}
-
-void
 test_vm_op_lda (byte_t *initial_memory, size_t initial_memory_size,
                 word_t initial_program_counter, byte_t expected,
                 int expected_status)
@@ -181,31 +135,6 @@ test_vm_op_jmp (byte_t *initial_memory, size_t initial_memory_size,
 int
 main (void)
 {
-    {
-        byte_t m1[2] = {0x00u, 0x01u};
-        test_vm_read_byte (m1, sizeof (m1), 0, 0x00u, VM_STATUS_OK);
-        byte_t m2[2] = {0x00u, 0x01u};
-        test_vm_read_byte (m2, sizeof (m2), 1, 0x01u, VM_STATUS_OK);
-        byte_t m4[VM_MEMORY_SIZE];
-        m4[WORD_T_MAX - 1] = 0x01u;
-        test_vm_read_byte (m4, sizeof (m4), WORD_T_MAX - 1, 0x01u, VM_STATUS_OK);
-        // // byte_t m5[VM_MEMORY_SIZE];
-        // test_vm_read_byte (m5, sizeof (m5), WORD_T_MAX, 0x00u, VM_STATUS_END_OF_MEMORY);
-    }
-
-    {
-        byte_t m1[2] = {0xcdu, 0xabu};
-        test_vm_read_word (m1, sizeof (m1), 0, 0xabcdu, VM_STATUS_OK);
-        byte_t m2[5] = {0x00u, 0x00u, 0x00u, 0xcdu, 0xabu};
-        test_vm_read_word(m2, sizeof (m2), 3, 0xabcdu, VM_STATUS_OK);
-        byte_t m4[VM_MEMORY_SIZE];
-        m4[WORD_T_MAX - 2] = 0xcdu;
-        m4[WORD_T_MAX - 1] = 0xabu;
-        test_vm_read_word(m4, sizeof (m4), WORD_T_MAX - 2, 0xabcdu, VM_STATUS_OK);
-        // byte_t m5[VM_MEMORY_SIZE];
-        // test_vm_read_word(m5, sizeof (m5), WORD_T_MAX, 0x0000u, VM_STATUS_END_OF_MEMORY);
-    }
-
     {
         byte_t m1[3] = {0x02u, 0x00u, 0xffu};
         test_vm_op_lda (m1, sizeof (m1), 0, 0xffu, VM_STATUS_OK);
