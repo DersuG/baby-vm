@@ -15,6 +15,18 @@ vm_reset (struct VM *vm)
     }
 }
 
+byte_t
+vm_read_memory (struct VM *vm, word_t address)
+{
+    return vm->memory[address];
+}
+
+void
+vm_write_memory (struct VM *vm, word_t address, byte_t data)
+{
+    vm->memory[address] = data;
+}
+
 /* prints 1 byte as binary (so 0xf0 becomes "11110000") */
 void
 print_byte_as_binary (unsigned char byte)
@@ -108,7 +120,7 @@ vm_op_lda (struct VM *vm)
         return vm->status;
     }
 
-    vm->register_a = vm->memory[address];
+    vm->register_a = vm_read_memory(vm, address);
 
     return VM_STATUS_OK;
 }
@@ -123,7 +135,7 @@ vm_op_ldb (struct VM *vm)
         return vm->status;
     }
 
-    vm->register_b = vm->memory[address];
+    vm->register_b = vm_read_memory(vm, address);
 
     return VM_STATUS_OK;
 }
@@ -149,7 +161,7 @@ vm_op_lwa (struct VM *vm)
     for (size_t i = 0; i < sizeof (vm->register_a); i++)
     {
         /* already checked for overflow */
-        vm->register_a |= vm->memory[address + i] << (i * 8);
+        vm->register_a |= vm_read_memory(vm, address + i) << (i * 8);
     }
 
     return VM_STATUS_OK;
@@ -176,7 +188,8 @@ vm_op_lwb (struct VM *vm)
     for (size_t i = 0; i < sizeof (vm->register_b); i++)
     {
         /* already checked for overflow */
-        vm->register_b |= vm->memory[address + i] << (i * 8);
+        // vm->register_b |= vm->memory[address + i] << (i * 8);
+        vm->register_b |= vm_read_memory(vm, address + i) << (i * 8);
     }
 
     return VM_STATUS_OK;

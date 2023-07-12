@@ -33,6 +33,14 @@ vm_reset (struct VM *vm);
 void
 print_binary (void *data, size_t bytes);
 
+/* Reads a byte from memory. */
+byte_t
+vm_read_memory (struct VM *vm, word_t address);
+
+/* Writes a byte from memory */
+void
+vm_write_memory (struct VM *vm, word_t address, byte_t data);
+
 /* Reads the byte in memory pointed to by the program counter,
    then increments the program counter.
    Sets and returns status codes:
