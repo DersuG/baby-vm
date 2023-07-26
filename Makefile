@@ -11,10 +11,7 @@ OBJS=vm.o test_vm.o
 
 all: $(OBJS) test_vm.bin tests
 
-tests: test_word_t_add.bin
-
-%.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+tests: vm.o test_word_t_add.bin
 
 #-------------------------------------------------------------------------------
 # vm
@@ -27,7 +24,7 @@ test_vm.bin: $(OBJS)
 # tests
 #-------------------------------------------------------------------------------
 
-test_word_t_add.bin: tests/test_word_t_add.o
+test_word_t_add.bin: tests/test_word_t_add.o vm.o
 	$(CC) -o $@ $^ $(CFLAGS)
 
 clean:
