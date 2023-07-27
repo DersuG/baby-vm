@@ -5,7 +5,12 @@ Made as a learning exercise.
 
 ## Building
 
-For now it's just: `gcc test_vm.c vm.c`
+You will need [meson](https://mesonbuild.com/).
+
+1. Create/setup build directory: `meson setup build`
+2. Enter build directory: `cd build`
+3. Compile: `meson compile`
+4. Run tests: `meson test`
 
 ## Architecture
 
