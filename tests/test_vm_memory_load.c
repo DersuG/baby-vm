@@ -33,13 +33,11 @@ main (void)
     }
 
     /* test */
-    vm_memory_load(&vm, rom);
+    vm_memory_load (&vm, rom);
     for (size_t i = 0; i < sizeof (rom); i++)
     {
         assert (vm.memory[i] == rom[i]);
     }
-
-    assert (1);
 
     return 0;
 }
