@@ -32,10 +32,11 @@ word_t
 word_t_add (word_t a, word_t b)
 {
     /* TODO: do this properly */
-    uint64_t result = (uint32_t) a + (uint64_t) b;
+    uint64_t result = (uint64_t) a + (uint64_t) b;
     while (result > WORD_T_MAX)
     {
         result -= WORD_T_MAX;
+        result--;
     }
     return result;
 }
