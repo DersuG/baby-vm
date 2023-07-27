@@ -70,6 +70,15 @@ vm_print (struct VM *vm)
     printf (" 0x%x %d\n", vm->register_b, vm->register_b);
 }
 
+void
+vm_memory_load (struct VM *vm, byte_t *data)
+{
+    for (int i = 0; i < VM_MEMORY_SIZE; i++)
+    {
+        vm->memory[i] = data[i];
+    }
+}
+
 int
 vm_memory_read_byte (struct VM *vm, word_t address, byte_t *result)
 {

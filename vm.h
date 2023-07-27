@@ -33,13 +33,17 @@ struct VM
     byte_t memory[VM_MEMORY_SIZE];
 };
 
-/* resets the vm to an initial state */
+/* Resets the vm to an initial state. */
 void
 vm_reset (struct VM *vm);
 
 /* Dumps a vm's registers to stdout. */
 void
 vm_print (struct VM *vm);
+
+/* Loads an array of byte_t of size VM_MEMORY_SIZE into the vm's memory. */
+void
+vm_memory_load (struct VM *vm, byte_t *data);
 
 /* Reads a byte from memory. Sets and returns status codes:
    - `VM_STATUS_OK` if ok */
