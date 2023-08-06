@@ -7,3 +7,4 @@ test ('vm_memory_load', executable ('test3', 'tests/test_vm_memory_load.c', 'vm.
 test ('vm_memory_read_byte', executable ('test4', 'tests/test_vm_memory_read_byte.c', 'vm.c'))
 test ('vm_memory_write_byte', executable ('test5', 'tests/test_vm_memory_write_byte.c', 'vm.c'))
 test ('vm_memory_read_word', executable ('test6', 'tests/test_vm_memory_read_word.c', 'vm.c'))
+test ('vm_program_counter_add', executable ('test7', 'tests/test_vm_program_counter_add.c', 'vm.c'))
