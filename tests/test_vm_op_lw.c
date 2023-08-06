@@ -49,6 +49,7 @@ main (void)
     test (0x0000u, 0xff00u, 0xeeffu);
     test (0x0001u, 0xeeffu, 0x1234u);
     test (WORD_T_MAX, 0xbeeeu, 0xaabbu);
+    test (0x0000u, WORD_T_MAX, 0xdeadu);
 
     return 0;
 }

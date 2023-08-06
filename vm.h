@@ -70,29 +70,20 @@ vm_program_counter_add (struct VM *vm, word_t amount);
 
 /* Load byte to register
    Uses the next 2 bytes after the instruction as an absolute address,
-   (little-endian) and loads the byte at that location into register B.
+   (little-endian) and loads the byte at that location into the register.
    Sets and returns status codes:
    - `VM_STATUS_OK` if ok */
 int
 vm_op_ld (struct VM *vm, int destination_register);
 
-/* Load Word A
+/* Load word into register
    Uses the next 2 bytes after the instruction as an absolute address,
-   (little-endian) and loads the word at that location into register A
+   (little-endian) and loads the word at that location into the register.
    (also little-endian).
    Sets and returns status codes:
    - `VM_STATUS_OK` if ok */
 int
-vm_op_lwa (struct VM *vm);
-
-/* Load Word B
-   Uses the next 2 bytes after the instruction as an absolute address,
-   (little-endian) and loads the word at that location into register B
-   (also little-endian).
-   Sets and returns status codes:
-   - `VM_STATUS_OK` if ok */
-int
-vm_op_lwb (struct VM *vm);
+vm_op_lw (struct VM *vm, int destination_register);
 
 /* Add
    Adds registers A and B, storing to A.

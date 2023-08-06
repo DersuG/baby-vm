@@ -136,7 +136,8 @@ vm_op_ld (struct VM *vm, int destination_register)
     }
 
     byte_t result;
-    if (vm_memory_read_byte (vm, address, &result) != VM_STATUS_OK)
+    vm->status = vm_memory_read_byte (vm, address, &result);
+    if (vm->status != VM_STATUS_OK)
     {
         return vm->status;
     }
@@ -156,7 +157,7 @@ vm_op_ld (struct VM *vm, int destination_register)
 }
 
 int
-vm_op_lwa (struct VM *vm)
+vm_op_lw (struct VM *vm, int destination_register)
 {
     word_t address;
     vm->status = vm_memory_read_word (vm, vm->program_counter, &address);
@@ -166,30 +167,22 @@ vm_op_lwa (struct VM *vm)
         return vm->status;
     }
 
-    vm->status = vm_memory_read_word (vm, address, &vm->register_a);
+    word_t result;
+    vm->status = vm_memory_read_word (vm, address, &result);
     if (vm->status != VM_STATUS_OK)
     {
         return vm->status;
     }
 
-    return VM_STATUS_OK;
-}
-
-int
-vm_op_lwb (struct VM *vm)
-{
-    word_t address;
-    vm->status = vm_memory_read_word (vm, vm->program_counter, &address);
-    vm->program_counter = word_t_add (vm->program_counter, sizeof (address));
-    if (vm->status != VM_STATUS_OK)
-    {
-        return vm->status;
-    }
-
-    vm->status = vm_memory_read_word (vm, address, &vm->register_b);
-    if (vm->status != VM_STATUS_OK)
-    {
-        return vm->status;
+    switch (destination_register) {
+    case VM_REGISTER_A:
+        vm->register_a = result;
+        break;
+    case VM_REGISTER_B:
+        vm->register_b = result;
+        break;
+    default:
+        assert(0);
     }
 
     return VM_STATUS_OK;
