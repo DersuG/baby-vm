@@ -1,6 +1,7 @@
 #include "vm.h"
 #include <stdio.h>
 #include <stdint.h>
+#include <assert.h>
 
 /* prints 1 byte as binary (so 0xf0 becomes "11110000") */
 void
@@ -124,7 +125,7 @@ vm_program_counter_add (struct VM *vm, word_t amount)
 }
 
 int
-vm_op_lda (struct VM *vm)
+vm_op_ld (struct VM *vm, int destination_register)
 {
     word_t address;
     vm->status = vm_memory_read_word (vm, vm->program_counter, &address);
@@ -139,28 +140,17 @@ vm_op_lda (struct VM *vm)
     {
         return vm->status;
     }
-    vm->register_a = result;
 
-    return VM_STATUS_OK;
-}
-
-int
-vm_op_ldb (struct VM *vm)
-{
-    word_t address;
-    vm->status = vm_memory_read_word (vm, vm->program_counter, &address);
-    vm_program_counter_add (vm, sizeof (address));
-    if (vm->status != VM_STATUS_OK)
-    {
-        return vm->status;
+    switch (destination_register) {
+    case VM_REGISTER_A:
+        vm->register_a = result;
+        break;
+    case VM_REGISTER_B:
+        vm->register_b = result;
+        break;
+    default:
+        assert(0);
     }
-
-    byte_t result;
-    if (vm_memory_read_byte (vm, address, &result) != VM_STATUS_OK)
-    {
-        return vm->status;
-    }
-    vm->register_b = result;
 
     return VM_STATUS_OK;
 }

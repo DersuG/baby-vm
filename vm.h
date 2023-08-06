@@ -23,6 +23,9 @@ word_t_add (word_t a, word_t b);
 #define VM_STATUS_OK 0            /* nothing */
 #define VM_STATUS_OVERFLOW 1      /* any operation overflows */
 
+#define VM_REGISTER_A 0
+#define VM_REGISTER_B 1
+
 struct VM
 {
     word_t program_counter; /* "address" (index) of current instruction byte*/
@@ -65,21 +68,13 @@ vm_memory_read_word (struct VM *vm, word_t address, word_t *result);
 void
 vm_program_counter_add (struct VM *vm, word_t amount);
 
-/* Load A
-   Uses the next 2 bytes after the instruction as an absolute address,
-   (little-endian) and loads the byte at that location into register A.
-   Sets and returns status codes:
-   - `VM_STATUS_OK` if ok */
-int
-vm_op_lda (struct VM *vm);
-
-/* Load B
+/* Load byte to register
    Uses the next 2 bytes after the instruction as an absolute address,
    (little-endian) and loads the byte at that location into register B.
    Sets and returns status codes:
    - `VM_STATUS_OK` if ok */
 int
-vm_op_ldb (struct VM *vm);
+vm_op_ld (struct VM *vm, int destination_register);
 
 /* Load Word A
    Uses the next 2 bytes after the instruction as an absolute address,

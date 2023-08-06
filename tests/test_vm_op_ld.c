@@ -7,7 +7,6 @@ test (word_t starting_address, word_t data_address, byte_t data)
 {
     struct VM vm;
     vm_reset (&vm);
-    vm.program_counter = starting_address;
 
     byte_t program[VM_MEMORY_SIZE];
     for (size_t i = 0; i < sizeof (program); i++)
@@ -24,10 +23,17 @@ test (word_t starting_address, word_t data_address, byte_t data)
     /* write data */
     program[data_address] = data;
 
-    /* test */
+    /* test register a */
+    vm_reset(&vm);
+    vm.program_counter = starting_address;
     vm_memory_load (&vm, program);
     assert (vm_op_ld (&vm, VM_REGISTER_A) == VM_STATUS_OK);
     assert (vm.register_a == data);
+
+    /* test register b */
+    vm_reset(&vm);
+    vm.program_counter = starting_address;
+    vm_memory_load(&vm, program);
     assert (vm_op_ld (&vm, VM_REGISTER_B) == VM_STATUS_OK);
     assert (vm.register_b == data);
 }
