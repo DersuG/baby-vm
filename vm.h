@@ -87,6 +87,7 @@ vm_op_lw (struct VM *vm, int destination_register);
 
 /* Add
    Adds registers A and B, storing to A.
+   If an overflow occurs, the value will wrap around properly.
    Sets and returns status codes:
    - `VM_STATUS_OK` if ok,
    - `VM_STATUS_OVERFLOW` if addition overflows */
@@ -95,6 +96,7 @@ vm_op_add (struct VM *vm);
 
 /* Subtract
    Subtracts register B from A, storing to A.
+   If an overflow occurs, the value will wrap around properly.
    Sets and returns status codes:
    - `VM_STATUS_OK` if ok,
    - `VM_STATUS_OVERFLOW` if subtraction overflows */
