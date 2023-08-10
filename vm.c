@@ -226,18 +226,18 @@ vm_op_add (struct VM *vm)
 int
 vm_op_sub (struct VM *vm)
 {
+    vm->status = VM_STATUS_OK;
+
     /* detect overflow */
     if (vm->register_a < vm->register_b)
     {
         vm->status = VM_STATUS_OVERFLOW;
-        return VM_STATUS_OVERFLOW;
     }
 
-    word_t result = vm->register_a - vm->register_b;
+    word_t result = word_t_subtract (vm->register_a, vm->register_b);
     vm->register_a = result;
 
-    vm->status = VM_STATUS_OK;
-    return VM_STATUS_OK;
+    return vm->status;
 }
 
 int
