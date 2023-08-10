@@ -10,3 +10,4 @@ test ('vm_memory_read_word', executable ('test6', 'tests/test_vm_memory_read_wor
 test ('vm_program_counter_add', executable ('test7', 'tests/test_vm_program_counter_add.c', 'vm.c'))
 test ('vm_op_ld', executable ('test8', 'tests/test_vm_op_ld.c', 'vm.c'))
 test ('vm_op_lw', executable ('test9', 'tests/test_vm_op_lw.c', 'vm.c'))
+test ('vm_op_add', executable ('test10', 'tests/test_vm_op_add.c', 'vm.c'))
