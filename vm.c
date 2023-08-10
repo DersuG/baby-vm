@@ -45,13 +45,17 @@ word_t_add (word_t a, word_t b)
 word_t
 word_t_subtract (word_t a, word_t b)
 {
-    word_t result = a;
+    word_t result = 0;
     if (a < b)
     {
-        result = WORD_T_MAX;
+        result = WORD_T_MAX - b;
+        result += a + 1;
+    }
+    else
+    {
+        result = a - b;
     }
 
-    result -= b;
     return result;
 }
 
