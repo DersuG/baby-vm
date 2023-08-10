@@ -42,6 +42,19 @@ word_t_add (word_t a, word_t b)
     return result;
 }
 
+word_t
+word_t_subtract (word_t a, word_t b)
+{
+    word_t result = a;
+    if (a < b)
+    {
+        result = WORD_T_MAX;
+    }
+
+    result -= b;
+    return result;
+}
+
 void
 vm_reset (struct VM *vm)
 {

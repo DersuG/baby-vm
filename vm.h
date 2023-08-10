@@ -20,6 +20,11 @@ typedef uint16_t word_t;
 word_t
 word_t_add (word_t a, word_t b);
 
+/* Subtract 2 `word_t` values. If this would overflow, the result will be
+   properly wrapped around. */
+word_t
+word_t_subtract (word_t a, word_t b);
+
 #define VM_STATUS_OK 0            /* nothing */
 #define VM_STATUS_OVERFLOW 1      /* any operation overflows */
 
