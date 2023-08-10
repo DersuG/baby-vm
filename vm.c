@@ -191,19 +191,19 @@ vm_op_lw (struct VM *vm, int destination_register)
 int
 vm_op_add (struct VM *vm)
 {
-    /* load 1-word address */
+    vm->status = VM_STATUS_OK;
+    
+    /* detect overflow */
     word_t room = WORD_T_MAX - vm->register_a;
     if (vm->register_b > room)
     {
         vm->status = VM_STATUS_OVERFLOW;
-        return VM_STATUS_OVERFLOW;
     }
 
-    word_t result = vm->register_a + vm->register_b;
+    word_t result = word_t_add (vm->register_a, vm->register_b);
     vm->register_a = result;
 
-    vm->status = VM_STATUS_OK;
-    return VM_STATUS_OK;
+    return vm->status;
 }
 
 int
