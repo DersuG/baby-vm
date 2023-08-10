@@ -21,7 +21,7 @@ main (void)
 {
     test (1, 0, 1, VM_STATUS_OK);
     test (10, 6, 4, VM_STATUS_OK);
-    test (10, 11, 0, VM_STATUS_OVERFLOW);
+    test (10, 15, WORD_T_MAX - 4, VM_STATUS_OVERFLOW);
     test (0, 1, WORD_T_MAX, VM_STATUS_OVERFLOW);
     test (0, WORD_T_MAX, 1, VM_STATUS_OVERFLOW);
 
