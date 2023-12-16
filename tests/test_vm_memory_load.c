@@ -5,8 +5,8 @@
 int
 main (void)
 {
-    struct VM vm;
-    byte_t rom[VM_MEMORY_SIZE];
+    struct vm vm;
+    vm_byte rom[VM_MEMORY_SIZE];
 
     /* clear memory */
     for (size_t i = 0; i < sizeof (rom); i++)
@@ -41,3 +41,4 @@ main (void)
 
     return 0;
 }
+
