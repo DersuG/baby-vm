@@ -11,15 +11,35 @@
 
 #define VM_MEMORY_SIZE ((uint_least32_t) VM_WORD_MAX + 1)
 
-/* Add 2 `vm_word` values together. If this would overflow, the result will be
-   properly wrapped around. */
-vm_word
-vm_word_add (vm_word a, vm_word b);
+/* Add 2 bytes using 2's compliment representation.
+ * Wraps properly on overflow. */
+vm_byte
+vm_byte_2c_add (vm_byte a, vm_byte b);
 
-/* Subtract 2 `word_t` values. If this would overflow, the result will be
-   properly wrapped around. */
+/* Subtract 2 bytes using 2's compliment representation.
+ * Wraps properly on overflow. */
+vm_byte
+vm_byte_2c_subtract (vm_byte a, vm_byte b);
+
+/* Add 2 bytes using binary coded decimal representation.
+ * Wraps properly on overflow. */
+vm_byte
+vm_byte_bcd_add (vm_byte a, vm_byte b);
+
+/* Subtract 2 bytes using binary coded decimal representation.
+ * Wraps properly on overflow. */
+vm_byte
+vm_byte_bcd_subtract (vm_byte a, vm_byte b);
+
+/* Add 2 words together using 2's compliment representation.
+ * Wraps properly on overflow. */
 vm_word
-vm_word_subtract (vm_word a, vm_word b);
+vm_word_2c_add (vm_word a, vm_word b);
+
+/* Subtract 2 words using 2's compliment representation.
+ * Wraps properly on overflow. */
+vm_word
+vm_word_2c_subtract (vm_word a, vm_word b);
 
 struct vm
 {

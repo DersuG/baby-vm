@@ -4,7 +4,7 @@
 #include <assert.h>
 
 vm_word
-vm_word_add (vm_word a, vm_word b)
+vm_word_2c_add (vm_word a, vm_word b)
 {
     /* TODO: do this properly */
     uint64_t result = (uint64_t) a + (uint64_t) b;
@@ -17,7 +17,7 @@ vm_word_add (vm_word a, vm_word b)
 }
 
 vm_word
-vm_word_subtract (vm_word a, vm_word b)
+vm_word_2c_subtract (vm_word a, vm_word b)
 {
     vm_word result = 0;
     if (a < b)
